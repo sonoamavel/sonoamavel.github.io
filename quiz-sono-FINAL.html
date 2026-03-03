@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,"script","https://connect.facebook.net/en_US/fbevents.js");
+fbq("init","837094036852064");
+fbq("track","PageView");
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=837094036852064&ev=PageView&noscript=1"/></noscript>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz: Qual é a Associação de Sono do Seu Bebê? — Sono Amável</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --night: #080D23;
+  --deep: #0F1635;
+  --mid: #1a2a55;
+  --rosa: #C47F8A;
+  --blush: #E4A8B2;
+  --petal: #F5D0D6;
+  --creme: #F2EDE4;
+  --verde: #4ADE80;
+  --ouro: #D4A96A;
+  --texto: #F2EDE4;
+  --sub: rgba(242,237,228,0.65);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--night);
+  color: var(--texto);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.star {
+  position: absolute; border-radius: 50%; background: white;
+  animation: tw var(--d,3s) ease-in-out infinite var(--dl,0s); opacity: 0;
+}
+@keyframes tw { 0%,100%{opacity:0;transform:scale(1)} 50%{opacity:var(--b,.5);transform:scale(1.5)} }
+
+.wrap { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; padding: 0 24px 80px; }
+
+.header { text-align: center; padding: 52px 0 40px; }
+.logo { font-family: 'Cormorant Garamond', serif; font-size: 14px; letter-spacing: .2em; text-transform: uppercase; color: var(--rosa); margin-bottom: 28px; display: block; }
+.moon { font-size: 36px; margin-bottom: 16px; display: block; animation: float 4s ease-in-out infinite; }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+.header h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(32px, 7vw, 52px); font-weight: 300; line-height: 1.1; color: var(--creme); margin-bottom: 16px; }
+.header h1 em { font-style: italic; color: var(--blush); }
+.header p { font-size: 16px; color: var(--sub); line-height: 1.7; max-width: 480px; margin: 0 auto; }
+
+.progress-wrap { margin: 32px 0 40px; }
+.progress-label { display: flex; justify-content: space-between; font-size: 13px; color: var(--sub); margin-bottom: 10px; }
+.progress-bar { height: 4px; background: rgba(196,127,138,.15); border-radius: 100px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--rosa), var(--blush)); border-radius: 100px; transition: width .6s cubic-bezier(.4,0,.2,1); width: 0%; }
+
+.screen { display: none; animation: slideIn .5s ease both; }
+.screen.active { display: block; }
+@keyframes slideIn { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+.question-card { background: rgba(255,255,255,.04); border: 1px solid rgba(196,127,138,.15); border-radius: 24px; padding: 40px 36px; backdrop-filter: blur(12px); }
+
+.q-num { font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--rosa); margin-bottom: 12px; }
+.q-text { font-family: 'Cormorant Garamond', serif; font-size: clamp(22px, 4.5vw, 30px); font-weight: 400; line-height: 1.25; color: var(--creme); margin-bottom: 28px; }
+
+.options { display: flex; flex-direction: column; gap: 12px; }
+.opt { display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: rgba(255,255,255,.04); border: 1.5px solid rgba(242,237,228,.1); border-radius: 14px; cursor: pointer; transition: all .25s ease; font-size: 15px; color: rgba(242,237,228,.85); text-align: left; line-height: 1.45; }
+.opt:hover { background: rgba(196,127,138,.12); border-color: rgba(196,127,138,.35); color: var(--creme); transform: translateX(4px); }
+.opt.selected { background: rgba(196,127,138,.18); border-color: var(--rosa); color: var(--creme); }
+.opt-icon { font-size: 22px; flex-shrink: 0; width: 32px; text-align: center; }
+
+.input-group { margin-bottom: 16px; }
+.input-group label { display: block; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--sub); margin-bottom: 8px; }
+.input-group input { width: 100%; background: rgba(255,255,255,.06); border: 1.5px solid rgba(242,237,228,.12); border-radius: 12px; padding: 15px 18px; font-size: 16px; font-family: 'DM Sans', sans-serif; color: var(--creme); outline: none; transition: border-color .25s; }
+.input-group input::placeholder { color: rgba(242,237,228,.35); }
+.input-group input:focus { border-color: var(--rosa); background: rgba(196,127,138,.08); }
+
+.btn { display: block; width: 100%; padding: 18px; background: linear-gradient(135deg, var(--rosa), var(--blush)); border: none; border-radius: 100px; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 600; color: white; cursor: pointer; letter-spacing: .02em; transition: transform .2s, box-shadow .2s; box-shadow: 0 8px 32px rgba(196,127,138,.35); margin-top: 28px; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(196,127,138,.5); }
+.btn:active { transform: translateY(0); }
+.btn:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+
+.result-header { text-align: center; padding: 20px 0 32px; }
+.result-badge { display: inline-block; background: rgba(74,222,128,.1); border: 1px solid rgba(74,222,128,.3); color: var(--verde); font-size: 13px; letter-spacing: .15em; text-transform: uppercase; padding: 8px 20px; border-radius: 100px; margin-bottom: 20px; }
+.result-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px, 6vw, 44px); font-weight: 300; line-height: 1.15; color: var(--creme); margin-bottom: 8px; }
+.result-title em { font-style: italic; color: var(--blush); }
+.result-sub { font-size: 15px; color: var(--sub); line-height: 1.7; }
+
+.result-card { background: rgba(255,255,255,.04); border: 1px solid rgba(196,127,138,.2); border-radius: 20px; padding: 32px 28px; margin: 24px 0; }
+.result-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: var(--blush); margin-bottom: 12px; }
+.result-card p { font-size: 15px; color: rgba(242,237,228,.8); line-height: 1.75; }
+
+.passos { margin: 8px 0; }
+.passo { display: flex; gap: 14px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid rgba(242,237,228,.06); }
+.passo:last-child { border-bottom: none; }
+.passo-num { width: 28px; height: 28px; border-radius: 50%; background: rgba(196,127,138,.15); border: 1px solid rgba(196,127,138,.3); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: var(--rosa); flex-shrink: 0; margin-top: 1px; }
+.passo-text { font-size: 14.5px; color: rgba(242,237,228,.8); line-height: 1.6; }
+.passo-text strong { color: var(--creme); font-weight: 600; }
+
+.rute-box { background: linear-gradient(135deg, rgba(196,127,138,.12), rgba(26,42,85,.4)); border: 1px solid rgba(196,127,138,.25); border-radius: 20px; padding: 28px; text-align: center; margin: 24px 0; }
+.rute-box .moon-sm { font-size: 40px; margin-bottom: 12px; }
+.rute-box h3 { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 300; color: var(--creme); margin-bottom: 8px; }
+.rute-box h3 strong { font-weight: 600; color: var(--blush); }
+.rute-box p { font-size: 14.5px; color: var(--sub); line-height: 1.7; margin-bottom: 20px; }
+.preco-destaque { font-size: 13px; color: var(--sub); margin-top: 12px; }
+.preco-destaque strong { color: var(--verde); }
+.garantia { display: flex; align-items: center; gap: 10px; background: rgba(74,222,128,.06); border: 1px solid rgba(74,222,128,.15); border-radius: 12px; padding: 14px 18px; font-size: 14px; color: rgba(242,237,228,.7); margin-top: 12px; }
+
+.share-box { text-align: center; padding: 24px 0 0; }
+.share-box p { font-size: 14px; color: var(--sub); margin-bottom: 16px; }
+.share-btn { display: inline-block; padding: 12px 28px; background: rgba(255,255,255,.06); border: 1px solid rgba(242,237,228,.15); border-radius: 100px; font-size: 14px; color: var(--creme); cursor: pointer; transition: all .2s; margin: 4px; text-decoration: none; }
+.share-btn:hover { background: rgba(255,255,255,.1); border-color: rgba(242,237,228,.3); }
+
+.intro-card { background: rgba(255,255,255,.04); border: 1px solid rgba(196,127,138,.15); border-radius: 24px; padding: 36px 32px; text-align: center; }
+.intro-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+.stat { padding: 16px 8px; background: rgba(255,255,255,.03); border-radius: 14px; border: 1px solid rgba(196,127,138,.1); }
+.stat-num { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; color: var(--rosa); line-height: 1; margin-bottom: 4px; }
+.stat-label { font-size: 11px; color: var(--sub); line-height: 1.4; }
+.intro-card p { font-size: 15px; color: var(--sub); line-height: 1.75; margin-bottom: 8px; }
+
+/* loading state */
+.btn-loading { position: relative; color: transparent !important; }
+.btn-loading::after { content: ''; position: absolute; top: 50%; left: 50%; width: 20px; height: 20px; margin: -10px 0 0 -10px; border: 2px solid rgba(255,255,255,.3); border-top-color: white; border-radius: 50%; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 480px) {
+  .question-card { padding: 28px 22px; }
+  .intro-card { padding: 24px 20px; }
+}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+
+<!--
+  ╔══════════════════════════════════════════════════════════╗
+  ║  NETLIFY FORMS — FORMULÁRIO OCULTO OBRIGATÓRIO          ║
+  ║  O Netlify detecta este form no build e cria o endpoint ║
+  ║  O JS vai submeter os dados para cá via fetch/AJAX      ║
+  ╚══════════════════════════════════════════════════════════╝
+-->
+<!-- form handled by Tally -->
+
+<div class="wrap">
+  <div class="header">
+    <span class="logo">🌙 Sono Amável · Luara Spigotti</span>
+    <span class="moon">🌙</span>
+    <h1>Qual é a <em>associação de sono</em><br>do seu bebê?</h1>
+    <p>Responda 5 perguntas rápidas e descubra exatamente por que seu bebê acorda à noite — e o que fazer.</p>
+  </div>
+
+  <div class="progress-wrap" id="progressWrap" style="display:none">
+    <div class="progress-label">
+      <span id="progressText">Pergunta 1 de 5</span>
+      <span id="progressPct">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <!-- TELA 0 — INTRO -->
+  <div class="screen active" id="screen-0">
+    <div class="intro-card">
+      <div class="intro-stats">
+        <div class="stat"><div class="stat-num">5</div><div class="stat-label">perguntas rápidas</div></div>
+        <div class="stat"><div class="stat-num">3min</div><div class="stat-label">para completar</div></div>
+        <div class="stat"><div class="stat-num">100%</div><div class="stat-label">gratuito</div></div>
+      </div>
+      <p>Descubra o perfil exato de sono do seu bebê e receba um mini-plano de primeiros passos personalizado.</p>
+      <p style="margin-top:8px">Criado por <strong style="color:var(--creme)">Luara Spigotti</strong> — consultora certificada de sono com formação internacional.</p>
+      <button class="btn" onclick="startQuiz()">Quero descobrir agora →</button>
+    </div>
+  </div>
+
+  <!-- PERGUNTA 1 -->
+  <div class="screen" id="screen-1">
+    <div class="question-card">
+      <p class="q-num">Pergunta 1 de 5</p>
+      <p class="q-text">Qual é a idade do seu bebê?</p>
+      <div class="options">
+        <div class="opt" onclick="selectOpt(this,1,'0 a 3 meses')"><span class="opt-icon">🌱</span>0 a 3 meses</div>
+        <div class="opt" onclick="selectOpt(this,1,'4 a 8 meses')"><span class="opt-icon">🌿</span>4 a 8 meses</div>
+        <div class="opt" onclick="selectOpt(this,1,'9 a 18 meses')"><span class="opt-icon">🌳</span>9 a 18 meses</div>
+        <div class="opt" onclick="selectOpt(this,1,'19 meses a 3 anos')"><span class="opt-icon">🌲</span>19 meses a 3 anos</div>
+      </div>
+      <button class="btn" id="btn-1" disabled onclick="nextScreen(2)">Próxima →</button>
+    </div>
+  </div>
+
+  <!-- PERGUNTA 2 -->
+  <div class="screen" id="screen-2">
+    <div class="question-card">
+      <p class="q-num">Pergunta 2 de 5</p>
+      <p class="q-text">Como seu bebê adormece normalmente?</p>
+      <div class="options">
+        <div class="opt" onclick="selectOpt(this,2,'No peito')"><span class="opt-icon">🤱</span>No peito (amamentando até dormir)</div>
+        <div class="opt" onclick="selectOpt(this,2,'No colo')"><span class="opt-icon">🤲</span>No colo (balançando, embalando)</div>
+        <div class="opt" onclick="selectOpt(this,2,'Com chupeta')"><span class="opt-icon">🍼</span>Com chupeta ou mamadeira</div>
+        <div class="opt" onclick="selectOpt(this,2,'Com movimento')"><span class="opt-icon">🚗</span>Em movimento (carrinho, carro, balanço)</div>
+        <div class="opt" onclick="selectOpt(this,2,'Sozinho')"><span class="opt-icon">✨</span>Sozinho, sem muita ajuda</div>
+      </div>
+      <button class="btn" id="btn-2" disabled onclick="nextScreen(3)">Próxima →</button>
+    </div>
+  </div>
+
+  <!-- PERGUNTA 3 -->
+  <div class="screen" id="screen-3">
+    <div class="question-card">
+      <p class="q-num">Pergunta 3 de 5</p>
+      <p class="q-text">Quantas vezes seu bebê acorda por noite, em média?</p>
+      <div class="options">
+        <div class="opt" onclick="selectOpt(this,3,'1 a 2 vezes')"><span class="opt-icon">😌</span>1 a 2 vezes (conseguimos lidar)</div>
+        <div class="opt" onclick="selectOpt(this,3,'3 a 5 vezes')"><span class="opt-icon">😩</span>3 a 5 vezes (estou cansada)</div>
+        <div class="opt" onclick="selectOpt(this,3,'Mais de 5 vezes')"><span class="opt-icon">😭</span>Mais de 5 vezes (estou no limite)</div>
+        <div class="opt" onclick="selectOpt(this,3,'Perdi a conta')"><span class="opt-icon">❓</span>Perdi a conta — são muitas</div>
+      </div>
+      <button class="btn" id="btn-3" disabled onclick="nextScreen(4)">Próxima →</button>
+    </div>
+  </div>
+
+  <!-- PERGUNTA 4 -->
+  <div class="screen" id="screen-4">
+    <div class="question-card">
+      <p class="q-num">Pergunta 4 de 5</p>
+      <p class="q-text">Quando seu bebê acorda de madrugada, o que acontece?</p>
+      <div class="options">
+        <div class="opt" onclick="selectOpt(this,4,'Chora até ser atendido')"><span class="opt-icon">😮‍💨</span>Chora até eu fazer o que ele quer (peito, colo etc.)</div>
+        <div class="opt" onclick="selectOpt(this,4,'Fica agitado')"><span class="opt-icon">🌀</span>Fica agitado, se mexe muito, difícil de acalmar</div>
+        <div class="opt" onclick="selectOpt(this,4,'Chama e às vezes volta')"><span class="opt-icon">🔊</span>Chama, chora um pouco, mas volta a dormir às vezes</div>
+        <div class="opt" onclick="selectOpt(this,4,'Acorda completamente')"><span class="opt-icon">🙁</span>Acorda completamente e demora muito para dormir de novo</div>
+      </div>
+      <button class="btn" id="btn-4" disabled onclick="nextScreen(5)">Próxima →</button>
+    </div>
+  </div>
+
+  <!-- PERGUNTA 5 -->
+  <div class="screen" id="screen-5">
+    <div class="question-card">
+      <p class="q-num">Pergunta 5 de 5</p>
+      <p class="q-text">O que você mais quer resolver agora?</p>
+      <div class="options">
+        <div class="opt" onclick="selectOpt(this,5,'Colocar no berço')"><span class="opt-icon">🛏️</span>Colocar no berço sem ele acordar</div>
+        <div class="opt" onclick="selectOpt(this,5,'Reduzir despertares')"><span class="opt-icon">🌙</span>Reduzir os despertares noturnos</div>
+        <div class="opt" onclick="selectOpt(this,5,'Dormir sozinho')"><span class="opt-icon">😴</span>Fazer ele dormir sozinho, sem peito ou colo</div>
+        <div class="opt" onclick="selectOpt(this,5,'Organizar rotina')"><span class="opt-icon">⏰</span>Organizar uma rotina de sono que funcione</div>
+      </div>
+      <button class="btn" id="btn-5" disabled onclick="nextScreen('capture')">Ver meu resultado →</button>
+    </div>
+  </div>
+
+  <!-- TELA DE CAPTURA -->
+  <div class="screen" id="screen-capture">
+    <div class="question-card">
+      <p class="q-num" style="color:var(--verde)">✓ Análise completa!</p>
+      <p class="q-text">Para onde envio<br><em>o resultado personalizado?</em></p>
+      <p style="font-size:14.5px;color:var(--sub);margin-bottom:24px;line-height:1.7">Seu mini-plano de primeiros passos está pronto. Deixa seus dados para receber — de graça.</p>
+
+      <div class="input-group">
+        <label>Seu primeiro nome *</label>
+        <input type="text" id="inputNome" placeholder="Como posso te chamar?" autocomplete="given-name">
+      </div>
+      <div class="input-group">
+        <label>Seu melhor e-mail *</label>
+        <input type="email" id="inputEmail" placeholder="email@exemplo.com" autocomplete="email">
+      </div>
+      <div class="input-group">
+        <label>Seu WhatsApp *</label>
+        <input type="tel" id="inputTelefone" placeholder="(11) 99999-9999" autocomplete="tel">
+      </div>
+
+      <button class="btn" id="btnEnviar" onclick="showResult()">Quero meu resultado gratuito →</button>
+      <p style="font-size:12px;color:var(--sub);text-align:center;margin-top:12px">🔒 Seus dados são privados. Sem spam. Prometido.</p>
+    </div>
+  </div>
+
+  <!-- TELA DE RESULTADO -->
+  <div class="screen" id="screen-result">
+    <div class="result-header">
+      <div class="result-badge">✓ Diagnóstico pronto</div>
+      <p id="result-saudacao" style="font-size:18px;color:var(--sub);margin-bottom:12px"></p>
+      <h2 class="result-title" id="result-title"></h2>
+      <p class="result-sub" id="result-sub"></p>
+    </div>
+
+    <div class="result-card">
+      <h3>O que está acontecendo</h3>
+      <p id="result-explicacao"></p>
+    </div>
+
+    <div class="result-card">
+      <h3>Primeiros passos — Método Sono Amável</h3>
+      <div class="passos" id="result-passos"></div>
+    </div>
+
+    <div class="rute-box">
+      <div class="moon-sm">🌙</div>
+      <h3>Para o plano <strong>completo</strong>,<br>conheça a Rute</h3>
+      <p>A Rute é uma consultora de sono com IA, criada por mim — Luara Spigotti. Ela conhece o perfil do SEU bebê e cria um plano personalizado. Disponível 24h, inclusive às 3h da manhã.</p>
+      <a href="https://rute-consultora-24h-sono-amavel.netlify.app/" target="_blank">
+        <button class="btn">Quero o plano completo da Rute →</button>
+      </a>
+      <p class="preco-destaque">Acesso por R$697 · <strong>7 dias de garantia</strong> · Acesso imediato</p>
+      <div class="garantia">🛡️ Se em 7 dias você não ficar satisfeita, devolvemos tudo. Sem perguntas.</div>
+    </div>
+
+    <div class="share-box">
+      <p>Você conhece uma mãe que precisa fazer esse quiz? 🌙</p>
+      <a class="share-btn" id="shareWhats" href="#" target="_blank">📲 Enviar pelo WhatsApp</a>
+      <a class="share-btn" href="#" onclick="copyLink(event)">📋 Copiar link</a>
+    </div>
+  </div>
+
+</div><!-- /wrap -->
+
+<script>
+// ── ESTRELAS
+const sf = document.getElementById('stars');
+for (let i = 0; i < 120; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  const sz = .6 + Math.random() * 2.2;
+  s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;width:${sz}px;height:${sz}px;--d:${2+Math.random()*5}s;--dl:${Math.random()*8}s;--b:${.15+Math.random()*.6}`;
+  sf.appendChild(s);
+}
+
+// ── ESTADO
+const answers = {};
+let nome = '';
+
+// ── NAVEGAÇÃO
+function startQuiz() {
+  document.getElementById('progressWrap').style.display = 'block';
+  goTo('1');
+  updateProgress(1);
+}
+
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateProgress(q) {
+  const pct = Math.round((q - 1) / 5 * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = q <= 5 ? `Pergunta ${q} de 5` : 'Quase lá...';
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+
+function selectOpt(el, q, val) {
+  el.closest('.options').querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  answers[q] = val;
+  document.getElementById('btn-' + q).disabled = false;
+}
+
+function nextScreen(next) {
+  if (typeof next === 'number') {
+    updateProgress(next);
+    goTo(String(next));
+  } else {
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('progressText').textContent = 'Calculando resultado...';
+    document.getElementById('progressPct').textContent = '100%';
+    goTo('capture');
+  }
+}
+
+// ── CALCULAR RESULTADO
+function calcularResultado(a2, a1, nomeUsuario) {
+  const idadeLabel = answers[1] || '';
+  const idadeMsg = {
+    '0 a 3 meses':       ' (ótimo momento — o cérebro está se organizando)',
+    '4 a 8 meses':       ' (janela de ouro para autonomia de sono)',
+    '9 a 18 meses':      ' (ainda dá tempo — resultados em 7-14 dias com consistência)',
+    '19 meses a 3 anos': ' (totalmente possível — bebês maiores respondem bem ao método)',
+  };
+
+  let titulo, sub, explicacao, passos, assocTag;
+
+  if (a2 === 'No peito') {
+    assocTag = 'associacao-peito';
+    titulo = 'Associação de Sono<br>com <em>o Peito</em>';
+    sub = 'Seu bebê aprendeu que dormir = mamar. A boa notícia: isso muda com o método certo.';
+    explicacao = `${nomeUsuario}, seu bebê desenvolveu uma associação de sono com o peito — a mais comum e também a mais tratável. Quando passa pelo despertar natural entre os ciclos de sono (toda noite, 4-6 vezes), ele busca a mesma condição que usou para adormecer: o peito. Não é fome. É hábito de sono. E hábito se muda.`;
+    passos = [
+      ['Separe mamada do sono', 'Ofereça o peito 15-20 minutos antes de colocar no berço — não como último passo para dormir. Assim a mamada deixa de ser a "senha" para o sono.'],
+      ['Crie uma rotina pré-sono de 20 minutos', 'Banho morno → massagem → música suave → escuridão → berço. A previsibilidade permite ao bebê relaxar antes mesmo de dormir.'],
+      ['Introduza gradualmente o berço acordada', 'Coloque no berço sonolenta mas ainda acordada. Fique presente — você não abandona, só muda a forma de acompanhar.'],
+    ];
+  } else if (a2 === 'No colo') {
+    assocTag = 'associacao-colo';
+    titulo = 'Associação de Sono<br>com <em>o Colo</em>';
+    sub = 'Seu bebê aprendeu que dormir = movimento e calor humano. É possível mudar com gentileza.';
+    explicacao = `${nomeUsuario}, seu bebê tem associação de sono com o colo e movimento. Cada vez que chega ao sono leve entre ciclos, ele "acorda" procurando o mesmo ambiente que o ajudou a dormir. Não é apego excessivo — é hábito neurológico. Bebês aprendem associações muito rapidamente e podem aprender novas com o método certo.`;
+    passos = [
+      ['Diminua gradualmente o movimento', 'Em vez de balançar até dormir completamente, vá reduzindo o movimento nos últimos minutos. O objetivo é que ele chegue ao berço ainda levemente consciente.'],
+      ['Transfira para o berço "quente"', 'Aqueça o lençol antes de transferir (com bolsa de água quente removida a tempo). A diferença de temperatura é o que acorda o bebê na transição.'],
+      ['Pratique a presença diferente', 'Você está lá — mas com a mão no peito dele, não no colo. A progressão é gradual e respeitosa.'],
+    ];
+  } else if (a2 === 'Com chupeta') {
+    assocTag = 'associacao-chupeta';
+    titulo = 'Associação de Sono<br>com <em>Sucção Não-Nutritiva</em>';
+    sub = 'Seu bebê usa a chupeta como âncora para dormir. Tem solução tranquila.';
+    explicacao = `${nomeUsuario}, a chupeta virou a "senha" do sono do seu bebê. Quando cai da boca durante o sono leve, ele acorda pedindo de volta — às vezes sem nem abrir os olhos direito. Isso é exaustivo para você, mas tem uma abordagem específica e gentil para resolver.`;
+    passos = [
+      ['Mapeie os despertares da chupeta', 'Por 3 noites, anote que horas ela cai. Você vai ver um padrão — e ele vai mostrar a janela exata para agir.'],
+      ['Ensine o bebê a achar sozinho (se 6m+)', 'Coloque 3-4 chupetas no berço. Muitas crianças acima de 6 meses aprendem a achar e recolocar sozinhas.'],
+      ['Transição gradual com presença', 'Para bebês menores, a abordagem é diminuir a dependência com técnicas de sucção gradual — sem trauma.'],
+    ];
+  } else if (a2 === 'Com movimento') {
+    assocTag = 'associacao-movimento';
+    titulo = 'Associação de Sono<br>com <em>Movimento</em>';
+    sub = 'Seu bebê precisa de movimento para dormir. Isso sobrecarrega toda a família.';
+    explicacao = `${nomeUsuario}, seu bebê desenvolveu associação de sono com movimento — carrinho, carro, balanço. O sistema vestibular dele ficou condicionado a "precisar" de movimento para atingir o sono profundo. É um dos perfis com resultado mais rápido quando o plano certo é aplicado.`;
+    passos = [
+      ['Introduza o berço como lugar positivo durante o dia', 'Brinque no berço. Coloque lá quando acordado e feliz. Ele precisa deixar de ser "só o lugar de dormir".'],
+      ['Reduza o movimento progressivamente', 'Semana 1: diminua a velocidade. Semana 2: pare antes de adormecer. Gradual e sem choro excessivo.'],
+      ['Substitua por rotina sensorial', 'Música, ruído branco, escuridão — estímulos que substituem o movimento como âncora.'],
+    ];
+  } else {
+    assocTag = 'sono-quase-autonomo';
+    titulo = 'Boa notícia: <em>sono quase autônomo!</em>';
+    sub = 'Seu bebê já tem boa capacidade de dormir sozinho. O foco agora é consolidar.';
+    explicacao = `${nomeUsuario}, seu bebê já tem uma independência de sono acima da média! Se ainda há despertares, provavelmente são relacionados a janelas de sono fora do ideal ou rotina inconsistente. O foco agora é afinar.`;
+    passos = [
+      ['Revise as janelas de sono', 'Bebês que dormem fora da janela ideal ficam hiperativados pelo cortisol. A janela certa muda tudo.'],
+      ['Verifique a rotina pré-sono', '20-30 minutos de rotina previsível sinalizam ao cérebro que é hora de desacelerar.'],
+      ['Avalie as sonecas', 'Sonecas mal posicionadas no dia afetam diretamente a noite — horário, duração e local fazem diferença.'],
+    ];
+  }
+
+  const idadeTagMap = {
+    '0 a 3 meses': 'bebe-0-3m',
+    '4 a 8 meses': 'bebe-4-8m',
+    '9 a 18 meses': 'bebe-9-18m',
+    '19 meses a 3 anos': 'bebe-19m-3a',
+  };
+
+  return {
+    titulo, sub, explicacao, passos, assocTag,
+    idadeTag: idadeTagMap[a1] || 'idade-nao-informada',
+    saudacao: `Olá, ${nomeUsuario}! 🌙 Seu bebê tem ${a1}${idadeMsg[a1] || '.'}`,
+    tags: [assocTag, idadeTagMap[a1] || 'idade-nao-informada', 'lead-quiz'].filter(Boolean).join(', ')
+  };
+}
+
+// ── ENVIAR PARA NETLIFY FORMS VIA AJAX
+async async function enviarNetlify(dados) {
+  // Envia para Tally via fetch (em background)
+  const TALLY_FORM_ID = 'ZjdKk0'; // substituir pelo ID do Tally
+  const payload = {
+    formId: TALLY_FORM_ID,
+    fields: [
+      { label: 'Seu Nome',    value: dados.nome },
+      { label: 'Seu Email',   value: dados.email },
+      { label: 'Seu WhatsApp',value: dados.telefone || '' },
+      { label: 'Associacao',  value: dados.assocTag },
+      { label: 'Tags',        value: dados.tags },
+    ]
+  };
+
+  // Fallback: abre o Tally pre-preenchido se fetch falhar
+  try {
+    const resp = await fetch(`https://tally.so/r/${TALLY_FORM_ID}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    console.log('Lead enviado!');
+  } catch (err) {
+    console.log('Envio silencioso falhou, continuando...');
+  }
+}
+
+// ── MOSTRAR RESULTADO
+async function showResult() {
+  const n = document.getElementById('inputNome').value.trim();
+  const e = document.getElementById('inputEmail').value.trim();
+  const t = document.getElementById('inputTelefone').value.trim();
+
+  if (!n || !e || !e.includes('@') || !t) {
+    alert('Por favor, preencha seu nome, e-mail e WhatsApp para receber o resultado!');
+    return;
+  }
+
+  nome = n.split(' ')[0];
+
+  // Loading no botão
+  const btn = document.getElementById('btnEnviar');
+  btn.classList.add('btn-loading');
+  btn.disabled = true;
+
+  const resultado = calcularResultado(answers[2], answers[1], nome);
+
+  // Renderizar resultado na tela
+  document.getElementById('result-saudacao').textContent = resultado.saudacao;
+  document.getElementById('result-title').innerHTML = resultado.titulo;
+  document.getElementById('result-sub').textContent = resultado.sub;
+  document.getElementById('result-explicacao').textContent = resultado.explicacao;
+
+  const passosEl = document.getElementById('result-passos');
+  passosEl.innerHTML = '';
+  resultado.passos.forEach(([t2, d], i) => {
+    passosEl.innerHTML += `<div class="passo"><div class="passo-num">${i+1}</div><div class="passo-text"><strong>${t2}</strong><br>${d}</div></div>`;
+  });
+
+  // Share WhatsApp
+  const url = encodeURIComponent(window.location.href);
+  const msg = encodeURIComponent('Fiz esse quiz de sono do bebê e foi incrível! Descubra a associação de sono do seu bebê:');
+  document.getElementById('shareWhats').href = `https://wa.me/?text=${msg}%20${url}`;
+
+  // Enviar para Netlify (em background — não bloqueia a exibição do resultado)
+  try {
+    await enviarNetlify({ nome: n, email: e, telefone: t, assocTag: resultado.assocTag, tags: resultado.tags });
+    console.log('✅ Lead enviado ao Netlify!');
+  } catch (err) {
+    // Falha silenciosa — não penaliza a experiência da usuária
+    console.warn('⚠️ Erro ao enviar lead:', err);
+  }
+
+  document.getElementById('progressWrap').style.display = 'none';
+  goTo('result');
+}
+
+function copyLink(e) {
+  e.preventDefault();
+  navigator.clipboard.writeText(window.location.href).then(() => {
+    const btn = e.target.closest('.share-btn');
+    const orig = btn.textContent;
+    btn.textContent = '✓ Link copiado!';
+    setTimeout(() => btn.textContent = orig, 2000);
+  });
+}
+</script>
+</body>
+</html>
