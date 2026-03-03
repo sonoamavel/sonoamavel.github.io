@@ -814,15 +814,44 @@ footer {
       </div>
 
       <div class="form-card">
-        <h3 class="form-title">Reserve sua<br><em>vaga gratuita</em></h3>
-        <p class="form-sub">Preencha abaixo e você receberá o link de acesso no WhatsApp no dia 10/03.</p>
-        <iframe data-tally-src="https://tally.so/embed/jaBppY?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
-          loading="lazy" width="100%" height="400" frameborder="0" marginheight="0" marginwidth="0"
-          title="Webinário Noite Amável" style="border:none;min-height:400px;"></iframe>
-        <script>var d=document,w="https://tally.so/widgets/embed.js",v=function(){"undefined"!=typeof Tally?Tally.loadEmbeds():d.querySelectorAll("iframe[data-tally-src]:not([src])").forEach((function(e){e.src=e.dataset.tallySrc}))};if("undefined"!=typeof Tally)v();else if(d.querySelector('script[src="'+w+'"]')==null){var s=d.createElement("script");s.src=w;s.onload=v;s.onerror=v;d.body.appendChild(s);}</script>
-        <p class="form-privacy">🔒 Seus dados são privados. Você receberá apenas o link da aula.</p>
+        <!-- FORM VISÍVEL -->
+        <div id="formContent">
+          <h3 class="form-title">Reserve sua<br><em>vaga gratuita</em></h3>
+          <p class="form-sub">Preencha abaixo e você receberá o link de acesso no WhatsApp no dia 10/03.</p>
 
+          <div class="f-group">
+            <label>Seu primeiro nome *</label>
+            <input type="text" id="wNome" placeholder="Como posso te chamar?" autocomplete="given-name">
+          </div>
+          <div class="f-group">
+            <label>Seu melhor e-mail *</label>
+            <input type="email" id="wEmail" placeholder="email@exemplo.com" autocomplete="email">
+          </div>
+          <div class="f-group">
+            <label>Seu WhatsApp *</label>
+            <input type="tel" id="wTelefone" placeholder="(11) 99999-9999" autocomplete="tel">
+          </div>
 
+          <button class="btn-inscricao" id="btnInscrever" onclick="inscrever()">
+            Quero minha vaga gratuita →
+          </button>
+          <p class="form-privacy">🔒 Seus dados são privados. Você receberá apenas o link da aula.</p>
+        </div>
+
+        <!-- SUCESSO -->
+        <div class="success-box" id="successBox" style="display:none">
+          <div class="success-icon">🌙</div>
+          <h3 class="success-title">Vaga <em>confirmada!</em></h3>
+          <p class="success-msg">
+            Você está inscrita na aula <strong>Noite Amável</strong> — terça-feira, 10/03 às 20h.<br><br>
+            O link de acesso será enviado no seu <strong>WhatsApp</strong> no dia da aula.<br><br>
+            Enquanto isso, entre no nosso grupo exclusivo para receber conteúdos e lembretes:
+          </p>
+          <a href="https://chat.whatsapp.com/L3VzFyR3AUeH40FaxmZCvT" target="_blank" style="display:inline-flex;align-items:center;gap:10px;background:#25D366;color:white;font-size:16px;font-weight:600;padding:16px 32px;border-radius:100px;text-decoration:none;margin-top:24px;box-shadow:0 8px 24px rgba(37,211,102,.35)">
+            <span style="font-size:20px">📲</span> Entrar no Grupo VIP
+          </a>
+          <p style="font-size:12px;color:var(--sub2);margin-top:12px">Grupo exclusivo para inscritas · Link de acesso no dia 10/03</p>
+        </div>
       </div>
     </div>
   </section>
@@ -928,6 +957,46 @@ resize();
 initStars();
 window.addEventListener('resize', () => { resize(); initStars(); });
 requestAnimationFrame(drawStars);
+
+// ── INSCRIÇÃO
+function inscrever() {
+  var n = document.getElementById('wNome').value.trim();
+  var e = document.getElementById('wEmail').value.trim();
+  var t = document.getElementById('wTelefone').value.trim();
+
+  if (!n || !e || !e.includes('@') || !t) {
+    alert('Por favor, preencha seu nome, e-mail e WhatsApp!');
+    return;
+  }
+
+  var btn = document.getElementById('btnInscrever');
+  btn.disabled = true;
+  btn.textContent = 'Confirmando...';
+
+  // Envia para Tally em background
+  var TALLY_ID = 'jaBppY';
+  try {
+    fetch('https://tally.so/r/' + TALLY_ID, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        fields: [
+          { label: 'Seu Nome',     value: n },
+          { label: 'Seu Email',    value: e },
+          { label: 'Seu WhatsApp', value: t }
+        ]
+      })
+    }).catch(function(){});
+  } catch(err) {}
+
+  // Pixel Lead
+  if (typeof fbq !== 'undefined') fbq('track', 'Lead', { content_name: 'webinar-noite-amavel' });
+
+  // Mostra tela de sucesso
+  document.getElementById('formContent').style.display = 'none';
+  document.getElementById('successBox').style.display = 'block';
+  document.getElementById('successBox').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
 
 // ── FAQ
 function toggleFaq(btn) {
