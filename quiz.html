@@ -340,7 +340,9 @@ let nome = '';
 // ── NAVEGAÇÃO
 function startQuiz() {
   document.getElementById('progressWrap').style.display = 'block';
-  goTo('1');
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-1').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
   updateProgress(1);
 }
 
@@ -456,35 +458,31 @@ function calcularResultado(a2, a1, nomeUsuario) {
 }
 
 // ── ENVIAR PARA NETLIFY FORMS VIA AJAX
-async async function enviarNetlify(dados) {
-  // Envia para Tally via fetch (em background)
-  const TALLY_FORM_ID = 'ZjdKk0'; // substituir pelo ID do Tally
-  const payload = {
+function enviarNetlify(dados) {
+  // Envia dados via hidden form para Tally (em background)
+  var TALLY_FORM_ID = 'ZjdKk0';
+  var payload = JSON.stringify({
     formId: TALLY_FORM_ID,
     fields: [
       { label: 'Seu Nome',    value: dados.nome },
       { label: 'Seu Email',   value: dados.email },
       { label: 'Seu WhatsApp',value: dados.telefone || '' },
       { label: 'Associacao',  value: dados.assocTag },
-      { label: 'Tags',        value: dados.tags },
+      { label: 'Tags',        value: dados.tags }
     ]
-  };
-
-  // Fallback: abre o Tally pre-preenchido se fetch falhar
+  });
   try {
-    const resp = await fetch(`https://tally.so/r/${TALLY_FORM_ID}`, {
+    fetch('https://tally.so/r/' + TALLY_FORM_ID, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    console.log('Lead enviado!');
-  } catch (err) {
-    console.log('Envio silencioso falhou, continuando...');
-  }
+      body: payload
+    }).catch(function() {});
+  } catch(e) {}
+  return Promise.resolve();
 }
 
 // ── MOSTRAR RESULTADO
-async function showResult() {
+function showResult() {
   const n = document.getElementById('inputNome').value.trim();
   const e = document.getElementById('inputEmail').value.trim();
   const t = document.getElementById('inputTelefone').value.trim();
@@ -522,7 +520,7 @@ async function showResult() {
 
   // Enviar para Netlify (em background — não bloqueia a exibição do resultado)
   try {
-    await enviarNetlify({ nome: n, email: e, telefone: t, assocTag: resultado.assocTag, tags: resultado.tags });
+    enviarNetlify({ nome: n, email: e, telefone: t, assocTag: resultado.assocTag, tags: resultado.tags });
     console.log('✅ Lead enviado ao Netlify!');
   } catch (err) {
     // Falha silenciosa — não penaliza a experiência da usuária
