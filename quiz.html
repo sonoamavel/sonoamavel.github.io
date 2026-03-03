@@ -553,7 +553,7 @@ function showResult() {
   // Enviar para Netlify (em background — não bloqueia a exibição do resultado)
   try {
     enviarNetlify({ nome: n, email: e, telefone: t, assocTag: resultado.assocTag, tags: resultado.tags });
-    console.log('✅ Lead enviado ao Netlify!');
+    console.log('✅ Lead enviado ao Tally!');
   } catch (err) {
     // Falha silenciosa — não penaliza a experiência da usuária
     console.warn('⚠️ Erro ao enviar lead:', err);
