@@ -211,13 +211,11 @@ body {
 
 /* SCROLL INDICATOR */
 .scroll-ind {
-  position: absolute;
-  bottom: 32px; left: 50%;
-  transform: translateX(-50%);
   display: flex; flex-direction: column; align-items: center; gap: 6px;
   font-size: 11px; letter-spacing: .15em; text-transform: uppercase;
   color: var(--sub2);
   animation: fadeUp 1s 1s ease both;
+  margin-top: 40px;
 }
 .scroll-arrow { animation: bounce 2s ease-in-out infinite; }
 @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
