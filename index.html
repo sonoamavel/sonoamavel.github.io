@@ -973,20 +973,21 @@ function inscrever() {
   btn.disabled = true;
   btn.textContent = 'Confirmando...';
 
-  // Envia para Tally em background
-  var TALLY_ID = 'jaBppY';
+  // Envia para Tally via iframe com URL params (hidden fields nativos do Tally)
   try {
-    fetch('https://tally.so/r/' + TALLY_ID, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        fields: [
-          { label: 'Seu Nome',     value: n },
-          { label: 'Seu Email',    value: e },
-          { label: 'Seu WhatsApp', value: t }
-        ]
-      })
-    }).catch(function(){});
+    var params = new URLSearchParams({
+      nome:     n || '',
+      email:    e || '',
+      whatsapp: t || ''
+    });
+    var iframe = document.createElement('iframe');
+    iframe.style.cssText = 'display:none;width:0;height:0;border:none;position:absolute;left:-9999px;';
+    iframe.src = 'https://tally.so/r/jaBppY?' + params.toString();
+    document.body.appendChild(iframe);
+    setTimeout(function() {
+      try { document.body.removeChild(iframe); } catch(e) {}
+    }, 8000);
+    console.log('Lead webinar enviado ao Tally:', params.toString());
   } catch(err) {}
 
   // Pixel Lead
