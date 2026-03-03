@@ -457,41 +457,23 @@ function calcularResultado(a2, a1, nomeUsuario) {
   };
 }
 
-// ── ENVIAR PARA TALLY VIA HIDDEN IFRAME FORM
+// ── ENVIAR PARA TALLY VIA IFRAME COM URL PARAMS (hidden fields nativos do Tally)
 function enviarNetlify(dados) {
   try {
-    // Iframe oculto para receber o POST sem sair da pagina
-    var iframeName = 'tally-hidden-' + Date.now();
-    var iframe = document.createElement('iframe');
-    iframe.name = iframeName;
-    iframe.style.cssText = 'display:none;width:0;height:0;border:none;position:absolute;';
-    document.body.appendChild(iframe);
-
-    // Form nativo apontando para o Tally
-    var form = document.createElement('form');
-    form.method = 'POST';
-    form.action = 'https://tally.so/r/ZjdKk0';
-    form.target = iframeName;
-    form.style.display = 'none';
-
-    var campos = {
-      'Seu Nome':     dados.nome,
-      'Seu Email':    dados.email,
-      'Seu WhatsApp': dados.telefone || '',
-      'Associacao':   dados.assocTag || '',
-      'Tags':         dados.tags || ''
-    };
-
-    Object.keys(campos).forEach(function(key) {
-      var input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = key;
-      input.value = campos[key];
-      form.appendChild(input);
+    // Tally aceita dados via query string quando hidden fields estão configurados no form
+    var params = new URLSearchParams({
+      nome:      dados.nome      || '',
+      email:     dados.email     || '',
+      whatsapp:  dados.telefone  || '',
+      associacao: dados.assocTag || '',
+      tags:      dados.tags      || ''
     });
 
-    document.body.appendChild(form);
-    form.submit();
+    // Carrega o form do Tally em iframe invisível — ele registra a submissão
+    var iframe = document.createElement('iframe');
+    iframe.style.cssText = 'display:none;width:0;height:0;border:none;position:absolute;left:-9999px;';
+    iframe.src = 'https://tally.so/r/ZjdKk0?' + params.toString();
+    document.body.appendChild(iframe);
 
     // Dispara evento Lead no Pixel do Facebook
     if (typeof fbq !== 'undefined') {
@@ -501,12 +483,12 @@ function enviarNetlify(dados) {
       });
     }
 
-    // Limpa apos 5s
+    // Limpa após 8s
     setTimeout(function() {
-      try { document.body.removeChild(form); } catch(e) {}
       try { document.body.removeChild(iframe); } catch(e) {}
-    }, 5000);
+    }, 8000);
 
+    console.log('Lead enviado ao Tally via hidden fields:', params.toString());
   } catch(e) {
     console.warn('Erro ao enviar lead:', e);
   }
