@@ -458,41 +458,35 @@ function calcularResultado(a2, a1, nomeUsuario) {
 }
 
 // ── ENVIAR PARA TALLY VIA IFRAME COM URL PARAMS (hidden fields nativos do Tally)
-function enviarNetlify(dados) {
+async function enviarNetlify(dados) {
   try {
-    // Tally aceita dados via query string quando hidden fields estão configurados no form
-    var params = new URLSearchParams({
-      nome:      dados.nome      || '',
-      email:     dados.email     || '',
-      whatsapp:  dados.telefone  || '',
-      associacao: dados.assocTag || '',
-      tags:      dados.tags      || ''
+    // Formspree — funciona nativamente no GitHub Pages
+    const formData = new FormData();
+    formData.append('nome',       dados.nome      || '');
+    formData.append('email',      dados.email     || '');
+    formData.append('whatsapp',   dados.telefone  || '');
+    formData.append('associacao', dados.assocTag  || '');
+    formData.append('tags',       dados.tags      || '');
+    formData.append('_subject',   'Novo lead — Quiz Sono Amável: ' + (dados.assocTag || ''));
+    formData.append('_captcha',   'false');
+    formData.append('_template',  'table');
+
+    const res = await fetch('https://formsubmit.co/sonoamavel@gmail.com', {
+      method: 'POST',
+      body: formData
     });
-
-    // Carrega o form do Tally em iframe invisível — ele registra a submissão
-    var iframe = document.createElement('iframe');
-    iframe.style.cssText = 'display:none;width:0;height:0;border:none;position:absolute;left:-9999px;';
-    iframe.src = 'https://tally.so/r/ZjdKk0?' + params.toString();
-    document.body.appendChild(iframe);
-
-    // Dispara evento Lead no Pixel do Facebook
-    if (typeof fbq !== 'undefined') {
-      fbq('track', 'Lead', {
-        content_name: 'quiz_sono_bebe',
-        content_category: dados.assocTag || 'quiz'
-      });
+    if (res.ok) {
+      console.log('✅ Lead quiz enviado!');
+    } else {
+      console.warn('⚠️ Erro no envio:', res.status);
     }
-
-    // Limpa após 8s
-    setTimeout(function() {
-      try { document.body.removeChild(iframe); } catch(e) {}
-    }, 8000);
-
-    console.log('Lead enviado ao Tally via hidden fields:', params.toString());
+    // Pixel Lead
+    if (typeof fbq !== 'undefined') {
+      fbq('track', 'Lead', { content_name: 'quiz_sono_bebe', content_category: dados.assocTag || 'quiz' });
+    }
   } catch(e) {
     console.warn('Erro ao enviar lead:', e);
   }
-  return Promise.resolve();
 }
 
 // ── MOSTRAR RESULTADO
